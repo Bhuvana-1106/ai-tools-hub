@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Tools Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    /* ─── CSS Variables (Dark - Default) ─── */
+    :root {
+      --navy:       #03070F;
+      --deep:       #060D1A;
+      --card-bg:    rgba(8, 20, 48, 0.6);
+      --card-border:rgba(56, 139, 253, 0.18);
+      --blue-core:  #1D6EFF;
+      --blue-bright:#3B8BFF;
+      --cyan:       #00C6FF;
+      --cyan-soft:  #5DD9FF;
+      --indigo:     #4040CC;
+      --text:       #E8F0FF;
+      --muted:      #7A9CC8;
+      --glow:       rgba(29, 110, 255, 0.35);
+    }
+
+    /* ─── CSS Variables (Light Mode) ─── */
+    body.light-mode {
+      --navy:        #f0f4ff;
+      --deep:        #e8eeff;
+      --card-bg:     rgba(255, 255, 255, 0.85);
+      --card-border: rgba(29, 110, 255, 0.18);
+      --blue-core:   #1D6EFF;
+      --blue-bright: #1558dd;
+      --cyan:        #0099cc;
+      --cyan-soft:   #0077aa;
+      --indigo:      #3333aa;
+      --text:        #0d1a33;
+      --muted:       #4a6080;
+      --glow:        rgba(29, 110, 255, 0.2);
+    }
+    body.light-mode::before {
+      background:
+        radial-gradient(ellipse 80% 60% at 10% 0%,   rgba(29,110,255,0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 90% 20%,  rgba(0,150,200,0.08)  0%, transparent 55%),
+        radial-gradient(ellipse 70% 60% at 50% 100%, rgba(64,64,204,0.07)  0%, transparent 60%);
+    }
+    body.light-mode header {
+      background: rgba(240, 244, 255, 0.88);
+      border-bottom-color: rgba(29,110,255,0.15);
+    }
+    body.light-mode .card {
+      box-shadow: 0 2px 16px rgba(29,110,255,0.07);
+    }
+    body.light-mode .stat-pill {
+      background: rgba(255,255,255,0.9);
+    }
+    body.light-mode .search-box {
+      background: rgba(255,255,255,0.9);
+    }
+    body.light-mode .banner-inner {
+      background: linear-gradient(135deg, rgba(220,232,255,0.9), rgba(240,246,255,0.95));
+      border-color: rgba(29,110,255,0.2);
+    }
+
+    /* ─── Reset & Base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      overflow-x: hidden;
+      transition: background 0.35s, color 0.35s;
+    }
+
+    /* ─── Mesh Background ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 10% 0%,   rgba(29,110,255,0.22) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 90% 20%,  rgba(0,198,255,0.15)  0%, transparent 55%),
+        radial-gradient(ellipse 70% 60% at 50% 100%, rgba(64,64,204,0.18)  0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 80% 80%,  rgba(29,110,255,0.12) 0%, transparent 50%);
+      z-index: 0;
+      pointer-events: none;
+      transition: background 0.35s;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(56,139,253,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56,139,253,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ─── Layout ─── */
+    .wrapper { position: relative; z-index: 1; }
+
+    /* ─── Header / Nav ─── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 60px;
+      border-bottom: 1px solid rgba(56,139,253,0.12);
+      backdrop-filter: blur(20px);
+      background: rgba(3,7,15,0.7);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: background 0.35s;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+    .logo-icon {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, var(--blue-core), var(--cyan));
+      border-radius: 9px;
+      display: grid; place-items: center;
+      font-size: 1rem;
+    }
+    nav { display: flex; gap: 32px; align-items: center; }
+    nav a {
+      font-size: 0.88rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.3px;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--cyan-soft); }
+    .nav-cta {
+      background: linear-gradient(135deg, var(--blue-core), var(--cyan));
+      color: #fff !important;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+
+    /* ─── Theme Toggle Button ─── */
+    .theme-toggle {
+      background: rgba(29,110,255,0.1);
+      border: 1px solid rgba(56,139,253,0.3);
+      color: var(--cyan-soft);
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .theme-toggle:hover {
+      background: rgba(29,110,255,0.22);
+      border-color: var(--blue-bright);
+    }
+
+    /* ─── Hero ─── */
+    .hero {
+      text-align: center;
+      padding: 110px 20px 80px;
+      position: relative;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(29,110,255,0.12);
+      border: 1px solid rgba(29,110,255,0.3);
+      color: var(--cyan-soft);
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-bottom: 28px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .hero-badge span { color: var(--cyan); }
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.6rem, 6vw, 5rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -2px;
+      max-width: 800px;
+      margin: 0 auto 22px;
+      color: var(--text);
+    }
+    .hero h1 .grad {
+      background: linear-gradient(90deg, var(--blue-bright), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 520px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue-core) 0%, var(--cyan) 100%);
+      color: #fff;
+      border: none;
+      padding: 13px 28px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      box-shadow: 0 4px 24px rgba(29,110,255,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(29,110,255,0.55);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid rgba(56,139,253,0.25);
+      padding: 13px 28px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--cyan-soft); color: var(--cyan-soft); }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 60px;
+      flex-wrap: wrap;
+    }
+    .stat-pill {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(14px);
+      border-radius: 14px;
+      padding: 16px 28px;
+      text-align: center;
+      transition: background 0.35s;
+    }
+    .stat-pill strong {
+      display: block;
+      font-family: 'Syne', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--blue-bright), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-pill small { color: var(--muted); font-size: 0.78rem; letter-spacing: 0.4px; }
+
+    /* ─── Category Search ─── */
+    .search-section {
+      max-width: 600px;
+      margin: 0 auto 70px;
+      padding: 0 20px;
+      text-align: center;
+    }
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: rgba(8,20,48,0.7);
+      border: 1px solid rgba(56,139,253,0.25);
+      border-radius: 14px;
+      padding: 10px 18px;
+      gap: 10px;
+      backdrop-filter: blur(14px);
+      transition: border-color 0.2s, background 0.35s;
+    }
+    .search-box:focus-within { border-color: var(--blue-bright); }
+    .search-box input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .search-box input::placeholder { color: var(--muted); }
+    .search-icon { color: var(--muted); font-size: 1rem; }
+
+    .filter-tabs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .tab {
+      background: rgba(8,20,48,0.5);
+      border: 1px solid rgba(56,139,253,0.15);
+      color: var(--muted);
+      padding: 7px 16px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .tab.active, .tab:hover {
+      background: rgba(29,110,255,0.2);
+      border-color: var(--blue-bright);
+      color: var(--cyan-soft);
+    }
+
+    /* ─── Section Label ─── */
+    .section-label {
+      text-align: center;
+      margin-bottom: 48px;
+      padding: 0 20px;
+    }
+    .section-label .eyebrow {
+      display: inline-block;
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+    .section-label h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      color: var(--text);
+    }
+    .section-label p { color: var(--muted); margin-top: 10px; font-size: 0.95rem; }
+
+    /* ─── Category Sections ─── */
+    .section { padding: 70px 40px; max-width: 1200px; margin: 0 auto; }
+    .section + .section { border-top: 1px solid rgba(56,139,253,0.08); }
+
+    /* ─── Tool Cards ─── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 28px 24px;
+      backdrop-filter: blur(16px);
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s, background 0.35s;
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--blue-bright), var(--cyan), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(59,139,255,0.45);
+      box-shadow: 0 12px 40px rgba(29,110,255,0.2), 0 0 0 1px rgba(29,110,255,0.1);
+    }
+    .card:hover::before { opacity: 1; }
+
+    .card-icon {
+      width: 46px; height: 46px;
+      border-radius: 12px;
+      display: grid; place-items: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .card-head { display: flex; align-items: center; gap: 12px; }
+    .card-title-wrap { display: block; }
+    .card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .card-tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-top: 3px;
+    }
+    .card p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.6;
+      flex: 1;
+    }
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 6px;
+    }
+    .card-btn {
+      background: linear-gradient(135deg, var(--blue-core), var(--cyan));
+      color: #fff;
+      border: none;
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-size: 0.83rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: opacity 0.2s, transform 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .card-btn:hover { opacity: 0.85; transform: scale(1.03); }
+    .card-free  { font-size: 0.75rem; color: #3DCC8E; font-weight: 500; }
+    .card-paid  { color: #FFA940; font-size: 0.75rem; font-weight: 500; }
+
+    .icon-blue   { background: rgba(29,110,255,0.15); }
+    .icon-cyan   { background: rgba(0,198,255,0.12); }
+    .icon-purple { background: rgba(140,82,255,0.15); }
+    .icon-teal   { background: rgba(0,210,170,0.12); }
+    .icon-pink   { background: rgba(255,60,120,0.12); }
+    .icon-amber  { background: rgba(255,165,0,0.12); }
+    .icon-green  { background: rgba(60,200,100,0.12); }
+    .icon-red    { background: rgba(255,80,80,0.12); }
+
+    .tag-free     { background: rgba(61,204,142,0.12); color: #3DCC8E; }
+    .tag-freemium { background: rgba(0,198,255,0.12);  color: var(--cyan-soft); }
+    .tag-paid     { background: rgba(255,169,64,0.12); color: #FFA940; }
+
+    /* ─── Featured Banner ─── */
+    .featured-banner {
+      max-width: 1200px;
+      margin: 0 auto 0;
+      padding: 0 40px 60px;
+    }
+    .banner-inner {
+      background: linear-gradient(135deg, rgba(14,30,72,0.8), rgba(8,20,48,0.9));
+      border: 1px solid rgba(29,110,255,0.25);
+      border-radius: 24px;
+      padding: 48px 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+      flex-wrap: wrap;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.35s;
+    }
+    .banner-inner::before {
+      content: '';
+      position: absolute;
+      right: -60px; top: -60px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(0,198,255,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .banner-text h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+    .banner-text p { color: var(--muted); margin-top: 8px; max-width: 420px; line-height: 1.6; }
+    .banner-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    /* ─── Footer ─── */
+    footer {
+      border-top: 1px solid rgba(56,139,253,0.1);
+      text-align: center;
+      padding: 36px 20px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    footer span { color: var(--cyan); }
+
+    /* ─── Scroll Animations ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up  { animation: fadeUp 0.55s ease forwards; }
+    .delay-1  { animation-delay: 0.1s; opacity: 0; }
+    .delay-2  { animation-delay: 0.2s; opacity: 0; }
+    .delay-3  { animation-delay: 0.3s; opacity: 0; }
+    .delay-4  { animation-delay: 0.4s; opacity: 0; }
+    .delay-5  { animation-delay: 0.5s; opacity: 0; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      header { padding: 16px 24px; }
+      nav { display: none; }
+      .hero { padding: 70px 20px 50px; }
+      .section { padding: 50px 20px; }
+      .banner-inner { padding: 32px 24px; }
+      .featured-banner { padding: 0 20px 50px; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- ── Header ── -->
+  <header>
+    <div class="logo">
+      <div class="logo-icon">⚡</div>
+      AI Tools Hub
+    </div>
+    <nav>
+      <a href="#daily">Daily Life</a>
+      <a href="#students">Students</a>
+      <a href="#workers">Professionals</a>
+      <a href="#creators">Creators</a>
+      <a href="#" class="nav-cta">Explore All</a>
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
+    </nav>
+  </header>
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="hero-badge fade-up"><span>✦</span> Your AI Toolkit for Every Role</div>
+    <h1 class="fade-up delay-1">
+      Discover AI Tools That<br/>
+      <span class="grad">Actually Work For You</span>
+    </h1>
+    <p class="fade-up delay-2">Curated AI tools for students, professionals, creators, and everyday life — organized the way you think.</p>
+    <div class="hero-actions fade-up delay-3">
+      <button class="btn-primary" onclick="document.getElementById('daily').scrollIntoView({behavior:'smooth'})">Explore Tools ↓</button>
+      <button class="btn-ghost">Submit a Tool</button>
+    </div>
+    <div class="hero-stats fade-up delay-4">
+      <div class="stat-pill"><strong>30+</strong><small>Curated Tools</small></div>
+      <div class="stat-pill"><strong>6</strong><small>Categories</small></div>
+      <div class="stat-pill"><strong>Free</strong><small>Most Tools</small></div>
+    </div>
+  </section>
+
+  <!-- ── Search + Filters ── -->
+  <div class="search-section fade-up delay-5">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="Search tools by name, use case..." id="searchInput" oninput="filterCards()" />
+    </div>
+    <div class="filter-tabs">
+      <button class="tab active" onclick="setTab(this,'all')">All</button>
+      <button class="tab" onclick="setTab(this,'daily')">Daily Life</button>
+      <button class="tab" onclick="setTab(this,'students')">Students</button>
+      <button class="tab" onclick="setTab(this,'workers')">Professionals</button>
+      <button class="tab" onclick="setTab(this,'creators')">Creators</button>
+      <button class="tab" onclick="setTab(this,'coding')">Coding</button>
+      <button class="tab" onclick="setTab(this,'finance')">Finance</button>
+    </div>
+  </div>
+
+  <!-- ══ DAILY LIFE ══ -->
+  <section class="section" id="daily">
+    <div class="section-label">
+      <span class="eyebrow">☀ Category 01</span>
+      <h2>AI for Daily Life</h2>
+      <p>Smart assistants to simplify your everyday tasks</p>
+    </div>
+    <div class="cards-grid" id="grid-daily">
+
+      <div class="card" data-cat="daily" data-name="chatgpt chatbot assistant">
+        <div class="card-head">
+          <div class="card-icon icon-blue">🤖</div>
+          <div class="card-title-wrap">
+            <h3>ChatGPT</h3>
+            <span class="card-tag tag-freemium">Freemium</span>
+          </div>
+        </div>
+        <p>Conversational AI for answers, writing, planning, and everyday questions.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://chat.openai.com" target="_blank">Visit →</a>
+          <span class="card-free">Free tier ✓</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="daily" data-name="google gemini assistant ai">
+        <div class="card-head">
+          <div class="card-icon icon-cyan">✨</div>
+          <div class="card-title-wrap">
+            <h3>Google Gemini</h3>
+            <span class="card-tag tag-free">Free</span>
+          </div>
+        </div>
+        <p>Google's AI integrated into Search, Gmail, Docs — answers and summarises fast.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://gemini.google.com" target="_blank">Visit →</a>
+          <span class="card-free">Free ✓</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="daily" data-name="notion ai notes productivity organise">
+        <div class="card-head">
+          <div class="card-icon icon-purple">📝</div>
+          <div class="card-title-wrap">
+            <h3>Notion AI</h3>
+            <span class="card-tag tag-freemium">Freemium</span>
+          </div>
+        </div>
+        <p>Write, plan, and organise your life with AI-powered notes and databases.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://notion.so" target="_blank">Visit →</a>
+          <span class="card-free">Free tier ✓</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="daily" data-name="otter transcription voice meeting notes">
+        <div class="card-head">
+          <div class="card-icon icon-teal">🎙️</div>
+          <div class="card-title-wrap">
+            <h3>Otter.ai</h3>
+            <span class="card-tag tag-freemium">Freemium</span>
+          </div>
+        </div>
+        <p>Real-time voice transcription for meetings, lectures, and conversations.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://otter.ai" target="_blank">Visit →</a>
+          <span class="card-free">Free tier ✓</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ STUDENTS ══ -->
+  <section class="section" id="students">
+    <div class="section-label">
+      <span class="eyebrow">🎓 Category 02</span>
+      <h2>AI for Students</h2>
+      <p>Study smarter, write better, and ace your assignments</p>
+    </div>
+    <div class="cards-grid" id="grid-students">
+
+      <div class="card" data-cat="students" data-name="grammarly writing grammar check essay">
+        <div class="card-head">
+          <div class="card-icon icon-green">✍️</div>
+          <div class="card-title-wrap">
+            <h3>Grammarly</h3>
+            <span class="card-tag tag-freemium">Freemium</span>
+          </div>
+        </div>
+        <p>AI writing assistant that fixes grammar, improves tone, and catches plagiarism.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://grammarly.com" target="_blank">Visit →</a>
+          <span class="card-free">Free tier ✓</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="students" data-name="perplexity research search ai answer">
+        <div class="card-head">
+          <div class="card-icon icon-blue">🔭</div>
+          <div class="card-title-wrap">
+            <h3>Perplexity AI</h3>
+            <span class="card-tag tag-free">Free</span>
+          </div>
+        </div>
+        <p>AI search engine that gives cited, accurate answers for research and studying.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://perplexity.ai" target="_blank">Visit →</a>
+          <span class="card-free">Free ✓</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="students" data-name="quizlet flashcards study memorise learn">
+        <div class="card-head">
+          <div class="card-icon icon-cyan">🃏</div>
+          <div class="card-title-wrap">
+            <h3>Quizlet AI</h3>
+            <span class="card-tag tag-freemium">Freemium</span>
+          </div>
+        </div>
+        <p>Auto-generate flashcards and practice quizzes from your notes or textbooks.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://quizlet.com" target="_blank">Visit →</a>
+          <span class="card-free">Free tier ✓</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="students" data-name="wolfram alpha math solver equations science">
+        <div class="card-head">
+          <div class="card-icon icon-amber">🧮</div>
+          <div class="card-title-wrap">
+            <h3>Wolfram Alpha</h3>
+            <span class="card-tag tag-free">Free</span>
+          </div>
+        </div>
+        <p>Solve complex maths, science and statistics problems step-by-step with AI.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://wolframalpha.com" target="_blank">Visit →</a>
+          <span class="card-free">Free ✓</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="students" data-name="consensus research papers ai science summarise">
+        <div class="card-head">
+          <div class="card-icon icon-purple">📚</div>
+          <div class="card-title-wrap">
+            <h3>Consensus</h3>
+            <span class="card-tag tag-freemium">Freemium</span>
+          </div>
+        </div>
+        <p>AI-powered search of 200M+ research papers — get evidence-based answers instantly.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://consensus.app" target="_blank">Visit →</a>
+          <span class="card-free">Free tier ✓</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="students" data-name="turnitin plagiarism check ai detector">
+        <div class="card-head">
+          <div class="card-icon icon-red">🛡️</div>
+          <div class="card-title-wrap">
+            <h3>Turnitin AI</h3>
+            <span class="card-tag tag-paid">Paid</span>
+          </div>
+        </div>
+        <p>Check your work for plagiarism and AI-generated content before submitting.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://turnitin.com" target="_blank">Visit →</a>
+          <span class="card-paid">Via institution</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ PROFESSIONALS ══ -->
+  <section class="section" id="workers">
+    <div class="section-label">
+      <span class="eyebrow">💼 Category 03</span>
+      <h2>AI for Professionals</h2>
+      <p>Tools for coders, business teams, finance, and more</p>
+    </div>
+    <div class="cards-grid" id="grid-workers">
+
+      <div class="card" data-cat="workers coding" data-name="github copilot code ai developer programming autocomplete">
+        <div class="card-head">
+          <div class="card-icon icon-blue">💻</div>
+          <div class="card-title-wrap">
+            <h3>GitHub Copilot</h3>
+            <span class="card-tag tag-paid">Paid</span>
+          </div>
+        </div>
+        <p>AI pair programmer that autocompletes code, writes functions, and explains bugs.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://github.com/features/copilot" target="_blank">Visit →</a>
+          <span class="card-paid">$10/mo</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="workers coding" data-name="cursor code editor ai IDE developer">
+        <div class="card-head">
+          <div class="card-icon icon-cyan">⚡</div>
+          <div class="card-title-wrap">
+            <h3>Cursor</h3>
+            <span class="card-tag tag-freemium">Freemium</span>
+          </div>
+        </div>
+        <p>AI-native code editor built on VS Code — chat with your codebase, edit entire files.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://cursor.sh" target="_blank">Visit →</a>
+          <span class="card-free">Free tier ✓</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="workers finance business" data-name="julius ai data analysis spreadsheet finance">
+        <div class="card-head">
+          <div class="card-icon icon-teal">📊</div>
+          <div class="card-title-wrap">
+            <h3>Julius AI</h3>
+            <span class="card-tag tag-freemium">Freemium</span>
+          </div>
+        </div>
+        <p>Upload spreadsheets or datasets and ask questions in plain English — instant data analysis.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://julius.ai" target="_blank">Visit →</a>
+          <span class="card-free">Free tier ✓</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="workers business" data-name="tome presentation slides AI business deck">
+        <div class="card-head">
+          <div class="card-icon icon-purple">📑</div>
+          <div class="card-title-wrap">
+            <h3>Gamma</h3>
+            <span class="card-tag tag-freemium">Freemium</span>
+          </div>
+        </div>
+        <p>Generate beautiful presentations and documents from a prompt in seconds.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://gamma.app" target="_blank">Visit →</a>
+          <span class="card-free">Free tier ✓</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="workers business" data-name="otter meeting notes transcribe business calls">
+        <div class="card-head">
+          <div class="card-icon icon-amber">🗓️</div>
+          <div class="card-title-wrap">
+            <h3>Fireflies.ai</h3>
+            <span class="card-tag tag-freemium">Freemium</span>
+          </div>
+        </div>
+        <p>AI notetaker that joins your Zoom/Teams meetings and produces action items automatically.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://fireflies.ai" target="_blank">Visit →</a>
+          <span class="card-free">Free tier ✓</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="workers finance" data-name="bloomberg terminal AI finance analysis investment">
+        <div class="card-head">
+          <div class="card-icon icon-green">💰</div>
+          <div class="card-title-wrap">
+            <h3>Kensho</h3>
+            <span class="card-tag tag-paid">Paid</span>
+          </div>
+        </div>
+        <p>AI analytics platform for finance professionals — market signals, NLP on filings, risk.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://kensho.com" target="_blank">Visit →</a>
+          <span class="card-paid">Enterprise</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ CREATORS ══ -->
+  <section class="section" id="creators">
+    <div class="section-label">
+      <span class="eyebrow">🎨 Category 04</span>
+      <h2>AI for Content Creators</h2>
+      <p>Design, video, writing, and social media made faster</p>
+    </div>
+    <div class="cards-grid" id="grid-creators">
+
+      <div class="card" data-cat="creators" data-name="canva design graphics presentation social media visual">
+        <div class="card-head">
+          <div class="card-icon icon-pink">🎨</div>
+          <div class="card-title-wrap">
+            <h3>Canva AI</h3>
+            <span class="card-tag tag-freemium">Freemium</span>
+          </div>
+        </div>
+        <p>Design social posts, thumbnails, and decks with AI image generation + Magic Write.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://canva.com" target="_blank">Visit →</a>
+          <span class="card-free">Free tier ✓</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="creators" data-name="runway video AI generate edit movie clip">
+        <div class="card-head">
+          <div class="card-icon icon-purple">🎬</div>
+          <div class="card-title-wrap">
+            <h3>Runway ML</h3>
+            <span class="card-tag tag-freemium">Freemium</span>
+          </div>
+        </div>
+        <p>Text-to-video and AI video editing for creators — remove backgrounds, generate clips.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://runwayml.com" target="_blank">Visit →</a>
+          <span class="card-free">Free tier ✓</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="creators" data-name="midjourney image generation art illustration design">
+        <div class="card-head">
+          <div class="card-icon icon-blue">🖼️</div>
+          <div class="card-title-wrap">
+            <h3>Midjourney</h3>
+            <span class="card-tag tag-paid">Paid</span>
+          </div>
+        </div>
+        <p>World-class AI image generator for artwork, thumbnails, and concept illustrations.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://midjourney.com" target="_blank">Visit →</a>
+          <span class="card-paid">$10/mo</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="creators" data-name="copy ai copywriting captions ads social media content">
+        <div class="card-head">
+          <div class="card-icon icon-cyan">✒️</div>
+          <div class="card-title-wrap">
+            <h3>Copy.ai</h3>
+            <span class="card-tag tag-freemium">Freemium</span>
+          </div>
+        </div>
+        <p>Generate social captions, ad copy, blog posts, and YouTube scripts in seconds.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://copy.ai" target="_blank">Visit →</a>
+          <span class="card-free">Free tier ✓</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="creators" data-name="elevenlabs voice audio speech text podcast">
+        <div class="card-head">
+          <div class="card-icon icon-teal">🎧</div>
+          <div class="card-title-wrap">
+            <h3>ElevenLabs</h3>
+            <span class="card-tag tag-freemium">Freemium</span>
+          </div>
+        </div>
+        <p>Ultra-realistic AI voice generation and voice cloning for podcasts, videos, and audio content.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://elevenlabs.io" target="_blank">Visit →</a>
+          <span class="card-free">Free tier ✓</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="creators" data-name="descript podcast video edit transcription audio">
+        <div class="card-head">
+          <div class="card-icon icon-amber">🎙️</div>
+          <div class="card-title-wrap">
+            <h3>Descript</h3>
+            <span class="card-tag tag-freemium">Freemium</span>
+          </div>
+        </div>
+        <p>Edit video and podcasts like a text document — remove filler words, overdub voice with AI.</p>
+        <div class="card-footer">
+          <a class="card-btn" href="https://descript.com" target="_blank">Visit →</a>
+          <span class="card-free">Free tier ✓</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── CTA Banner ── -->
+  <div class="featured-banner">
+    <div class="banner-inner">
+      <div class="banner-text">
+        <h3>🚀 Start With One Tool Today</h3>
+        <p>You don't need every tool — pick one category that fits your life right now and spend 15 minutes exploring it. That's how the habit starts.</p>
+      </div>
+      <div class="banner-actions">
+        <button class="btn-primary" onclick="document.getElementById('daily').scrollIntoView({behavior:'smooth'})">Browse All Tools</button>
+        <button class="btn-ghost">Share This Hub</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Footer ── -->
+  <footer>
+    AI Tools Hub &nbsp;·&nbsp; All tools linked to their official sites
+  </footer>
+
+</div>
+
+<script>
+  /* ── Theme Toggle ── */
+  function toggleTheme() {
+    const isLight = document.body.classList.toggle('light-mode');
+    document.getElementById('themeToggle').textContent = isLight ? '☀️' : '🌙';
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  }
+
+  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+  /* Apply saved preference on load */
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light-mode');
+    document.getElementById('themeToggle').textContent = '☀️';
+  }
+
+  /* ── Filter / Search ── */
+  let activeTab = 'all';
+
+  function setTab(el, cat) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    activeTab = cat;
+    applyFilter();
+  }
+
+  function filterCards() { applyFilter(); }
+
+  function applyFilter() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('.card').forEach(card => {
+      const name    = (card.dataset.name || '').toLowerCase();
+      const catAttr = (card.dataset.cat  || '').toLowerCase();
+      const matchCat  = activeTab === 'all' || catAttr.includes(activeTab);
+      const matchText = !query || name.includes(query);
+      card.style.display = (matchCat && matchText) ? '' : 'none';
+    });
+  }
+</script>
+</body>
+</html>
